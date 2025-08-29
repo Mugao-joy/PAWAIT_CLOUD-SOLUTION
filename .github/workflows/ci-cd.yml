@@ -1,0 +1,61 @@
+name: CI/CD - Build & Deploy to Cloud Run (Artifact Registry + Terraform)
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  REGION: "us-central1"
+  ARTIFACT_REPO: "insight-agent-repo"
+  IMAGE_NAME: "insight-agent"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Authenticate to GCP using Workload Identity Federation
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+        service_account: ${{ secrets.GCP_SA_EMAIL }}
+        create_credentials_file: true
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Configure docker authentication for Artifact Registry
+      run: |
+        gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+      env:
+        CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.auth.outputs.credentials_file_path }}
+
+    - name: Set image tag
+      run: |
+        echo "IMAGE_URI=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.IMAGE_NAME }}:${GITHUB_SHA}" >> $GITHUB_ENV
+
+    - name: Build container
+      run: docker build -t $IMAGE_URI ./app
+
+    - name: Push to Artifact Registry
+      run: docker push $IMAGE_URI
+
+    - name: Terraform init
+      working-directory: ./terraform
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+      run: terraform init -input=false
+
+    - name: Terraform apply (deploy new image)
+      working-directory: ./terraform
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+      run: terraform apply -auto-approve \
+        -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+        -var="region=${{ env.REGION }}" \
+        -var="image=${{ env.IMAGE_URI }}"
