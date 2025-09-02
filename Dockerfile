@@ -11,13 +11,13 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
         python3-dev \
+        libyaml-dev \
         libffi-dev \
         libssl-dev \
+        zlib1g-dev \
         libbz2-dev \
         liblzma-dev \
         libreadline-dev \
-        zlib1g-dev \
-        libyaml-dev \
         curl \
         wget \
         git \
