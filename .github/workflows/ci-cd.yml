@@ -29,6 +29,11 @@ jobs:
       - name: Push Docker image
         run: docker push $IMAGE_URI
 
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
+
       - name: Terraform init
         working-directory: ./infra
         env:
