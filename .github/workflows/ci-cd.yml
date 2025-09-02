@@ -46,7 +46,7 @@ jobs:
       run: docker push $IMAGE_URI
 
     - name: Terraform init
-      working-directory: ./terraform
+      working-directory: ./infra
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
       run: terraform init -input=false
