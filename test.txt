@@ -1,1 +1,5 @@
 Test build trigger
+echo "Test build trigger" >> test.txt
+git add .
+git commit -m "trigger build"
+git push origin main
