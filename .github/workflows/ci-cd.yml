@@ -34,7 +34,7 @@ jobs:
 
     - name: Configure docker authentication for Artifact Registry
       run: |
-        gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+        gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
       env:
         CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.auth.outputs.credentials_file_path }}
 
