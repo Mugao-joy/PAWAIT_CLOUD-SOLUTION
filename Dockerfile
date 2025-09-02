@@ -17,6 +17,7 @@ RUN apt-get update && \
         liblzma-dev \
         libreadline-dev \
         zlib1g-dev \
+        libyaml-dev \
         curl \
         wget \
         git \
