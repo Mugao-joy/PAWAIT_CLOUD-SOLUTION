@@ -12,11 +12,11 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy dependency manifests first for caching
-COPY requirements.txt /app/requirements.txt
+COPY requirements.txt /requirements.txt
 
 # Install python deps
 RUN python -m pip install --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt
+    pip install --no-cache-dir -r /requirements.txt
 
 # Copy app code
 COPY . /app
