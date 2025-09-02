@@ -43,7 +43,7 @@ jobs:
         echo "IMAGE_URI=${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REPO }}/${{ env.IMAGE_NAME }}:${GITHUB_SHA}" >> $GITHUB_ENV
 
     - name: Build container
-      run: docker build -t $IMAGE_URI ./app
+      run: docker build -t $IMAGE_URI .
 
     - name: Push to Artifact Registry
       run: docker push $IMAGE_URI
@@ -55,7 +55,7 @@ jobs:
       run: terraform init -input=false
 
     - name: Terraform apply (deploy new image)
-      working-directory: ./terraform
+      working-directory: .infra
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
       run: terraform apply -auto-approve \
