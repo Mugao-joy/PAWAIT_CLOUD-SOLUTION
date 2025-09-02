@@ -22,12 +22,15 @@ jobs:
 
     - name: Authenticate to GCP using Workload Identity Federation
       id: auth
+      
       uses: google-github-actions/auth@v2
       with:
         workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
         service_account: ${{ secrets.GCP_SA_EMAIL }}
         create_credentials_file: true
         project_id: ${{ secrets.GCP_PROJECT_ID }}
+        audience: sts.googleapis.com
+  
 
     - name: Configure docker authentication for Artifact Registry
       run: |
