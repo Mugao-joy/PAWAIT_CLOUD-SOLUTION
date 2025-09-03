@@ -16,7 +16,7 @@ jobs:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: |
           echo "$GCP_SA_KEY" > infra/key.json
-          gcloud auth activate-service-account RunSAPawait@pawait-470513.iam.gserviceaccount.com --key-file=key.json
+          gcloud auth activate-service-account RunSAPawait@pawait-470513.iam.gserviceaccount.com --key-file=infra/key.json
           gcloud auth configure-docker us-central1-docker.pkg.dev
 
       - name: Set image tag
@@ -28,11 +28,6 @@ jobs:
 
       - name: Push Docker image
         run: docker push $IMAGE_URI
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.6.0
 
       - name: Terraform init
         working-directory: ./infra
