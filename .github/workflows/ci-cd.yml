@@ -48,3 +48,7 @@ jobs:
             -var="project_id=pawait-470513" \
             -var="region=us-central1" \
             -var="image=${IMAGE_URI}"
+
+      - name: Cleanup credentials
+        if: always()
+        run: rm -f infra/key.json
