@@ -15,7 +15,7 @@ jobs:
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: |
-          echo "$GCP_SA_KEY" > key.json
+          echo "$GCP_SA_KEY" > infra/key.json
           gcloud auth activate-service-account RunSAPawait@pawait-470513.iam.gserviceaccount.com --key-file=key.json
           gcloud auth configure-docker us-central1-docker.pkg.dev
 
