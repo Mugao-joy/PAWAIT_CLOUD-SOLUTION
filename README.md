@@ -42,6 +42,7 @@ After this, add repo secrets:
 - `WORKLOAD_IDENTITY_PROVIDER` (full provider resource id)
 - `GCP_SA_EMAIL` (e.g. `gha-deployer@project.iam.gserviceaccount.com`)
 - `GCP_PROJECT_ID` (the project id)
+-`Json.key`
 
 6. **Create files** (app, Dockerfile, terraform files, GH workflow). See files in this repo.
 
