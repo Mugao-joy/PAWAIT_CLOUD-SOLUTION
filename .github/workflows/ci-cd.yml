@@ -29,12 +29,16 @@ jobs:
       - name: Push Docker image
         run: docker push $IMAGE_URI
 
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+
       - name: Terraform init
         working-directory: ./infra
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: key.json
+          GOOGLE_APPLICATION_CREDENTIALS: infra/key.json
         run: terraform init -input=false
-
       - name: Terraform apply
         working-directory: ./infra
         env:
